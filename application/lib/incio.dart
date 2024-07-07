@@ -43,7 +43,7 @@ class __SplashScreenState extends State<_SplashScreen> {
     Future.delayed(Duration(seconds: 5), () {
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => calculator()), // Reemplaza LoginScreen con el nombre correcto de tu clase de pantalla de login
+        MaterialPageRoute(builder: (context) => Calculator()), // Reemplaza LoginScreen con el nombre correcto de tu clase de pantalla de login
       );
     });
   }
