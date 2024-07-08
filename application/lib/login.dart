@@ -19,6 +19,9 @@ class Login extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Stack(
+        alignment: Alignment
+            .topCenter, // Alinea todos los widgets hacia arriba en el centro
+
         children: <Widget>[
           // Fondo de la pantalla con la imagen
           Image.asset(
@@ -26,6 +29,22 @@ class Login extends StatelessWidget {
             fit: BoxFit.cover,
             width: double.infinity,
             height: double.infinity,
+          ),
+          // Contenedor para el texto "CalcIntegral"
+          Positioned(
+            top: 55.0, // Ajusta la posición verticalmente
+            child: Container(
+              alignment: Alignment.topCenter,
+              child: Text(
+                'CalcIntegral',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 35.0,
+                  fontWeight: FontWeight.bold,
+                  fontFamily: 'Merriweather',
+                ),
+              ),
+            ),
           ),
           // Contenedor para el formulario de inicio de sesión
           Align(
@@ -62,7 +81,8 @@ class Login extends StatelessWidget {
                     ),
                     decoration: InputDecoration(
                       hintText: 'Contraseña',
-                      icon: Icon(Icons.lock, color: Colors.amber[800], size: 30),
+                      icon:
+                          Icon(Icons.lock, color: Colors.amber[800], size: 30),
                     ),
                   ),
                   SizedBox(height: 50.0),
@@ -76,8 +96,10 @@ class Login extends StatelessWidget {
                       );
                     },
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Color(0xFFF9A826), // Color de fondo del botón
-                      minimumSize: Size(double.infinity, 50), // Tamaño mínimo del botón
+                      backgroundColor:
+                          Color(0xFFF9A826), // Color de fondo del botón
+                      minimumSize:
+                          Size(double.infinity, 50), // Tamaño mínimo del botón
                     ),
                     child: Text(
                       'Iniciar sesión',
@@ -89,14 +111,18 @@ class Login extends StatelessWidget {
                       ),
                     ),
                   ),
-                  SizedBox(height: 30.0), // Espacio entre el botón y el texto de registro
+                  SizedBox(
+                      height:
+                          30.0), // Espacio entre el botón y el texto de registro
 
                   // Texto para redirigir al registro
                   TextButton(
                     onPressed: () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => Registro()), // Asegúrate de usar Registro() en lugar de registro()
+                        MaterialPageRoute(
+                            builder: (context) =>
+                                Registro()), // Asegúrate de usar Registro() en lugar de registro()
                       );
                     },
                     child: Text(

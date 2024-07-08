@@ -6,6 +6,7 @@ class Registro extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Stack(
+        alignment: Alignment.topCenter, // Alinea todos los widgets hacia arriba en el centro
         children: <Widget>[
           // Fondo de la pantalla con la imagen
           Image.asset(
@@ -15,18 +16,18 @@ class Registro extends StatelessWidget {
             height: double.infinity,
           ),
           // Contenedor para el texto "CalcIntegral"
-          Container(
-            padding: EdgeInsets.only(
-                top:
-                    100.0), // Ajusta el padding según sea necesario para el margen superior
-            alignment: Alignment.topCenter,
-            child: Text(
-              'CalcIntegral',
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 40.0,
-                fontWeight: FontWeight.bold,
-                fontFamily: 'Merriweather',
+          Positioned(
+            top: 50.0, // Ajusta la posición verticalmente
+            child: Container(
+              alignment: Alignment.topCenter,
+              child: Text(
+                'CalcIntegral',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 40.0,
+                  fontWeight: FontWeight.bold,
+                  fontFamily: 'Merriweather',
+                ),
               ),
             ),
           ),
@@ -35,7 +36,7 @@ class Registro extends StatelessWidget {
             alignment: Alignment.bottomCenter,
             child: Container(
               padding: EdgeInsets.all(20.0),
-              margin: EdgeInsets.only(left: 20.0, right: 20.0, bottom: 20.0),
+              margin: EdgeInsets.symmetric(horizontal: 20.0, vertical: 20.0),
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
