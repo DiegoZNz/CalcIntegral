@@ -1,9 +1,8 @@
+import 'package:flutter/material.dart';
 import 'package:application/calculator.dart';
 import 'package:application/historial.dart';
-import 'package:flutter/material.dart';
 
 class perfil extends StatelessWidget {
- 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -23,18 +22,24 @@ class perfil extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   CircleAvatar(
-                    radius: 45,
-                    backgroundImage: NetworkImage('https://placekitten.com/200/200'),
+                    radius: 40,
+                    backgroundImage:
+                        NetworkImage('https://placekitten.com/200/200'),
                   ),
                   SizedBox(height: 10),
-                  Text(
-                    'Username',
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 22,
-                      fontFamily: 'Merriweather',
-                      fontWeight: FontWeight.bold,
-                    ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        'Username',
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontSize: 20,
+                          fontFamily: 'Merriweather',
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),                  
+                    ],
                   ),
                 ],
               ),
@@ -50,12 +55,11 @@ class perfil extends StatelessWidget {
                   fontSize: 20,
                 ),
               ),
-             onTap: () {
+              onTap: () {
                 Navigator.pop(context); // Cierra el drawer
               },
               selected: true,
               selectedTileColor: Colors.amber[300],
-             
             ),
             ListTile(
               leading: Icon(Icons.calculate, color: Colors.black),
@@ -70,7 +74,8 @@ class perfil extends StatelessWidget {
               ),
               onTap: () {
                 Navigator.pop(context);
-                Navigator.push(context, MaterialPageRoute(builder: (context) => Calculator()));
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => Calculator()));
               },
               selected: false,
               selectedTileColor: Colors.amber[300],
@@ -88,7 +93,8 @@ class perfil extends StatelessWidget {
               ),
               onTap: () {
                 Navigator.pop(context);
-                Navigator.push(context, MaterialPageRoute(builder: (context) => historial()));
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => historial()));
               },
               selected: false,
               selectedTileColor: Colors.amber[300],
@@ -96,14 +102,79 @@ class perfil extends StatelessWidget {
           ],
         ),
       ),
-      body: Center(
-        child: Text('Contenido del perfil'),
+      body: SingleChildScrollView(
+        padding: EdgeInsets.fromLTRB(16.0, 100.0, 16.0, 16.0), // Añade margen superior
+        child: Center(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              SizedBox(height: 10),
+              CircleAvatar(
+                radius: 60,
+                backgroundImage:
+                    NetworkImage('https://placekitten.com/200/200'),
+              ),
+              SizedBox(height: 10),
+              ElevatedButton.icon(
+                onPressed: () {
+                  // Lógica para cambiar la foto del usuario
+                },
+                icon: Icon(
+                  Icons.camera_alt,
+                  color: Colors.amber[900],
+                ),
+                label: Text('Cambiar foto de perfil',
+                    style: TextStyle(color: Colors.amber[800], fontSize: 18)), // Ajusta el tamaño de la fuente
+              ),
+              SizedBox(height: 20),
+              TextFormField(
+                initialValue: 'Username',
+                style: TextStyle(fontSize: 18), // Ajusta el tamaño de la fuente
+                decoration: InputDecoration(
+                  labelText: 'Nombre de usuario',
+                  border: OutlineInputBorder(),
+                ),
+              ),
+              SizedBox(height: 10),
+              TextFormField(
+                initialValue: 'correo@example.com',
+                style: TextStyle(fontSize: 18), // Ajusta el tamaño de la fuente
+                decoration: InputDecoration(
+                  labelText: 'Correo electrónico',
+                  border: OutlineInputBorder(),
+                ),
+              ),
+              SizedBox(height: 10),
+              TextFormField(
+                initialValue: 'Contraseña actual',
+                obscureText: true,
+                style: TextStyle(fontSize: 18), // Ajusta el tamaño de la fuente
+                decoration: InputDecoration(
+                  labelText: 'Contraseña',
+                  border: OutlineInputBorder(),
+                ),
+              ),
+              SizedBox(height: 70),
+              ElevatedButton(
+                onPressed: () {
+                  // Lógica para guardar los cambios del perfil
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.amber[800], // Color de fondo del botón
+                ),
+                child: Text(
+                  'Guardar cambios',
+                  style: TextStyle(color: Colors.white, fontSize: 18), // Ajusta el tamaño de la fuente
+                ),
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }
 }
 
 void main() => runApp(MaterialApp(
-  home: perfil(),
-));
-
+      home: perfil(),
+    ));
