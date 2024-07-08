@@ -3,7 +3,6 @@ import 'package:application/perfil.dart';
 import 'package:flutter/material.dart';
 
 class historial extends StatelessWidget {
- 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
