@@ -1,3 +1,5 @@
+import 'package:application/historial.dart';
+import 'package:application/perfil.dart';
 import 'package:flutter/material.dart';
 
 void main() => runApp(MaterialApp(
@@ -54,7 +56,7 @@ class Calculator extends StatelessWidget {
                 ),
                 onTap: () {
                   Navigator.pop(context);
-                  // Aquí puedes implementar la navegación a la pantalla de perfil
+                   Navigator.push(context, MaterialPageRoute(builder: (context) => perfil()));
                 },
                 selected: false,
                 selectedTileColor: Colors.amber[300],
@@ -89,7 +91,7 @@ class Calculator extends StatelessWidget {
                 ),
                 onTap: () {
                   Navigator.pop(context);
-                  // Aquí puedes implementar la navegación a la pantalla de historial
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => historial()));
                 },
                 selected: false,
                 selectedTileColor: Colors.amber[300],
