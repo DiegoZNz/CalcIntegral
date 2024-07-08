@@ -38,7 +38,7 @@ class perfil extends StatelessWidget {
                           fontFamily: 'Merriweather',
                           fontWeight: FontWeight.bold,
                         ),
-                      ),                  
+                      ),
                     ],
                   ),
                 ],
@@ -103,7 +103,8 @@ class perfil extends StatelessWidget {
         ),
       ),
       body: SingleChildScrollView(
-        padding: EdgeInsets.fromLTRB(16.0, 100.0, 16.0, 16.0), // Añade margen superior
+        padding: EdgeInsets.fromLTRB(
+            16.0, 100.0, 16.0, 16.0), // Añade margen superior
         child: Center(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
@@ -124,7 +125,9 @@ class perfil extends StatelessWidget {
                   color: Colors.amber[900],
                 ),
                 label: Text('Cambiar foto de perfil',
-                    style: TextStyle(color: Colors.amber[800], fontSize: 18)), // Ajusta el tamaño de la fuente
+                    style: TextStyle(
+                        color: Colors.amber[800],
+                        fontSize: 18)), // Ajusta el tamaño de la fuente
               ),
               SizedBox(height: 20),
               TextFormField(
@@ -160,11 +163,14 @@ class perfil extends StatelessWidget {
                   // Lógica para guardar los cambios del perfil
                 },
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.amber[800], // Color de fondo del botón
+                  backgroundColor:
+                      Colors.amber[800], // Color de fondo del botón
                 ),
                 child: Text(
                   'Guardar cambios',
-                  style: TextStyle(color: Colors.white, fontSize: 18), // Ajusta el tamaño de la fuente
+                  style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 18), // Ajusta el tamaño de la fuente
                 ),
               ),
             ],
