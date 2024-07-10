@@ -12,45 +12,48 @@ class _RegisterScreenState extends State<RegisterScreen> {
   String _username = '';
   String _password = '';
   String _email = '';
-  String _profilePicture = ''; // Añadido para incluir la foto de perfil
+  String _profilePicture = '';
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Stack(
-        alignment: Alignment.topCenter,
-        children: <Widget>[
-          Image.asset(
-            'assets/images/2.png',
-            fit: BoxFit.cover,
-            width: double.infinity,
-            height: double.infinity,
-          ),
-          Positioned(
-            top: 50.0,
-            child: Container(
-              alignment: Alignment.topCenter,
-              child: Text(
-                'CalcIntegral',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 40.0,
-                  fontWeight: FontWeight.bold,
-                  fontFamily: 'Merriweather',
+      body: SingleChildScrollView(
+        child: Container(
+          height: MediaQuery.of(context).size.height,
+          child: Stack(
+            alignment: Alignment.topCenter,
+            children: <Widget>[
+              Image.asset(
+                'assets/images/2.png',
+                fit: BoxFit.cover,
+                width: double.infinity,
+                height: double.infinity,
+              ),
+              Positioned(
+                top: 50.0,
+                child: Container(
+                  alignment: Alignment.topCenter,
+                  child: Text(
+                    'CalcIntegral',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 40.0,
+                      fontWeight: FontWeight.bold,
+                      fontFamily: 'Merriweather',
+                    ),
+                  ),
                 ),
               ),
-            ),
-          ),
-          Align(
-            alignment: Alignment.bottomCenter,
-            child: Container(
-              padding: EdgeInsets.all(20.0),
-              margin: EdgeInsets.symmetric(horizontal: 20.0, vertical: 20.0),
-              child: Form(
-                key: _formKey,
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: <Widget>[
+              Align(
+                alignment: Alignment.bottomCenter,
+                child: Container(
+                  padding: EdgeInsets.all(20.0),
+                  margin: EdgeInsets.symmetric(horizontal: 20.0, vertical: 20.0),
+                  child: Form(
+                    key: _formKey,
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: <Widget>[
                     TextFormField(
                       style: TextStyle(
                         fontFamily: 'Merriweather',
@@ -168,12 +171,14 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         ),
                       ),
                     ),
-                  ],
+                      ],
+                    ),
+                  ),
                 ),
               ),
-            ),
+            ],
           ),
-        ],
+        ),
       ),
     );
   }

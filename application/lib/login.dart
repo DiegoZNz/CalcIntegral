@@ -16,44 +16,43 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Stack(
-        alignment: Alignment
-            .topCenter, // Alinea todos los widgets hacia arriba en el centro
-        children: <Widget>[
-          // Fondo de la pantalla con la imagen
-          Image.asset(
-            'assets/images/2.png',
-            fit: BoxFit.cover,
-            width: double.infinity,
-            height: double.infinity,
-          ),
-          // Contenedor para el texto "CalcIntegral"
-          Positioned(
-            top: 55.0, // Ajusta la posición verticalmente
-            child: Container(
-              alignment: Alignment.topCenter,
-              child: Text(
-                'CalcIntegral',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 35.0,
-                  fontWeight: FontWeight.bold,
-                  fontFamily: 'Merriweather',
+      body: SingleChildScrollView(
+        child: Container(
+          height: MediaQuery.of(context).size.height,
+          child: Stack(
+            alignment: Alignment.topCenter,
+            children: <Widget>[
+              Image.asset(
+                'assets/images/2.png',
+                fit: BoxFit.cover,
+                width: double.infinity,
+                height: double.infinity,
+              ),
+              Positioned(
+                top: 55.0,
+                child: Container(
+                  alignment: Alignment.topCenter,
+                  child: Text(
+                    'CalcIntegral',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 35.0,
+                      fontWeight: FontWeight.bold,
+                      fontFamily: 'Merriweather',
+                    ),
+                  ),
                 ),
               ),
-            ),
-          ),
-          // Contenedor para el formulario de inicio de sesión
-          Align(
-            alignment: Alignment.bottomCenter,
-            child: Container(
-              padding: EdgeInsets.all(20.0),
-              margin: EdgeInsets.only(left: 20.0, right: 20.0, bottom: 35.0),
-              child: Form(
-                key: _formKey,
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: <Widget>[
+              Align(
+                alignment: Alignment.bottomCenter,
+                child: Container(
+                  padding: EdgeInsets.all(20.0),
+                  margin: EdgeInsets.only(left: 20.0, right: 20.0, bottom: 35.0),
+                  child: Form(
+                    key: _formKey,
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: <Widget>[
                     // Campos de usuario y contraseña
                     TextFormField(
                       style: TextStyle(
@@ -170,12 +169,14 @@ class _LoginScreenState extends State<LoginScreen> {
                         ),
                       ),
                     ),
-                  ],
+                      ],
+                    ),
+                  ),
                 ),
               ),
-            ),
+            ],
           ),
-        ],
+        ),
       ),
     );
   }

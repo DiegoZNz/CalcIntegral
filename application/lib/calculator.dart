@@ -1,4 +1,5 @@
 import 'package:application/historial.dart';
+import 'package:application/login.dart';
 import 'package:application/perfil.dart';
 import 'package:flutter/material.dart';
 
@@ -96,6 +97,27 @@ class Calculator extends StatelessWidget {
                 selected: false,
                 selectedTileColor: Colors.amber[300],
               ),
+              // Nuevo botón de cierre de sesión
+              ListTile(
+                leading: Icon(Icons.exit_to_app, color: Colors.black),
+                title: Text(
+                  'Cerrar Sesión',
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontFamily: 'Merriweather',
+                    fontWeight: FontWeight.bold,
+                    fontSize: 20,
+                  ),
+                ),
+                onTap: () {
+                  // Aquí puedes agregar la lógica para cerrar sesión
+                  //Navigator.pop(context);
+                  // Ejemplo: Navegar a la pantalla de inicio de sesión
+                  Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => LoginScreen()));
+                },
+                selected: false,
+                selectedTileColor: Colors.amber[300],
+              ),
             ],
           ),
         ),
@@ -110,219 +132,129 @@ class CalculatorBody extends StatefulWidget {
   _CalculatorBodyState createState() => _CalculatorBodyState();
 }
 
-enum CalculatorMode {
-  Normal,
-  Integral,
-}
+enum CalculatorMode { Basic, Function }
 
 class _CalculatorBodyState extends State<CalculatorBody> {
   String input = '';
-  double result = 0.0;
-  CalculatorMode _calculatorMode = CalculatorMode.Normal;
+  CalculatorMode _calculatorMode = CalculatorMode.Basic;
 
   void onButtonPressed(String buttonText) {
     setState(() {
-      if (buttonText == '=') {
-        result = _calculateResult();
-      } else if (buttonText == 'C') {
+      if (buttonText == 'C') {
         input = '';
-        result = 0.0;
-      } else if (buttonText == 'Back') {
-        _calculatorMode = CalculatorMode.Normal;
+      } else if (buttonText == '←') {
+        input = input.isNotEmpty ? input.substring(0, input.length - 1) : '';
       } else {
         input += buttonText;
       }
     });
   }
 
-  double _calculateResult() {
-    try {
-      return double.parse(input);
-    } catch (e) {
-      return 0.0;
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
         Expanded(
           child: Container(
-            padding: EdgeInsets.all(19.0),
-            alignment: Alignment.centerRight,
-            child: Text(
-              input,
-              style: TextStyle(fontSize: 24.0),
-            ),
+            padding: EdgeInsets.all(20),
+            alignment: Alignment.bottomRight,
+            child: Text(input, style: TextStyle(fontSize: 36.0)),
           ),
         ),
-        SizedBox(height: 10.0),
-
-        // Filas de botones numéricos y operadores según el modo
-        _calculatorMode == CalculatorMode.Normal
-            ? _buildNormalKeyboard()
-            : _buildIntegralKeyboard(),
-
-        SizedBox(height: 15.0),
-        // Botón para cambiar entre modos
-        _buildSwitchModeButton(),
+        _buildTopRow(),
+        _calculatorMode == CalculatorMode.Basic
+            ? _buildBasicKeyboard()
+            : _buildFunctionKeyboard(),
       ],
     );
   }
 
-  Widget _buildNormalKeyboard() {
-    return Column(
-      children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: <Widget>[
-            _buildButton('C'),
-            _buildButton('()'),
-            _buildButton('%'),
-            _buildButton('/'),
-          ],
-        ),
-        SizedBox(height: 10.0),
-
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: <Widget>[
-            _buildButton('7'),
-            _buildButton('8'),
-            _buildButton('9'),
-            _buildButton('x'),
-          ],
-        ),
-        SizedBox(height: 10.0),
-
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: <Widget>[
-            _buildButton('4'),
-            _buildButton('5'),
-            _buildButton('6'),
-            _buildButton('-'),
-          ],
-        ),
-        SizedBox(height: 10.0),
-
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: <Widget>[
-            _buildButton('1'),
-            _buildButton('2'),
-            _buildButton('3'),
-            _buildButton('+'),
-          ],
-        ),
-
-        SizedBox(height: 10.0),
-
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: <Widget>[
-            _buildButton('∫'), // Botón de integral
-            _buildButton('0'),
-            _buildButton('.'),
-            _buildButton('='),
-          ],
-        ),
-        SizedBox(height: 15.0),
-      ],
-    );
-  }
-
-  Widget _buildIntegralKeyboard() {
-    return Column(
-      children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: <Widget>[
-            _buildButton('sin'),
-            _buildButton('cos'),
-            _buildButton('tan'),
-            _buildButton('∫'),
-          ],
-        ),
-        SizedBox(height: 10.0),
-
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: <Widget>[
-            _buildButton('√'),
-            _buildButton('log'),
-            _buildButton('ln'),
-            _buildButton('e'),
-          ],
-        ),
-        // Añade más filas según sea necesario para la calculadora de integrales
-      ],
-    );
-  }
-
-  Widget _buildButton(String buttonText,
-      {double height = 70.0, double minWidth = 70.0}) {
-    Color buttonColor = buttonText == 'C'
-        ? const Color.fromARGB(255, 249, 80, 67)
-        : buttonText == '=' || buttonText == '∫'
-            ? Color(0xFFF9A826)
-            : buttonText == '-' ||
-                    buttonText == '+' ||
-                    buttonText == 'x' ||
-                    buttonText == '/' ||
-                    buttonText == '()' ||
-                    buttonText == '%'
-                ? Color.fromARGB(255, 228, 225, 225)
-                : Color(0xFFF0F0F0);
-
-    return MaterialButton(
-      height: height,
-      minWidth: minWidth,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(15.0),
+  Widget _buildTopRow() {
+    return Container(
+      height: 50,
+      child: Row(
+        children: [
+          Expanded(child: _buildTopButton('123', CalculatorMode.Basic)),
+          Expanded(child: _buildTopButton('f(x)', CalculatorMode.Function)),
+          Expanded(child: _buildButton('ABC')),
+        ],
       ),
-      color: buttonColor,
-      child: Text(
-        buttonText,
-        style: TextStyle(
-          fontSize: 24.0,
-          color: buttonText == 'C' || buttonText == '=' || buttonText == '∫'
-              ? Colors.white
-              : Colors.black,
-        ),
-      ),
-      onPressed: () {
-        onButtonPressed(buttonText);
-      },
     );
   }
 
-  Widget _buildSwitchModeButton() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 10.0),
+  Widget _buildTopButton(String text, CalculatorMode mode) {
+    bool isActive = _calculatorMode == mode;
+    return Container(
+      margin: EdgeInsets.all(2),
       child: ElevatedButton(
+        style: ElevatedButton.styleFrom(
+          backgroundColor: isActive ? Colors.amber : Colors.white,
+          foregroundColor: isActive ? Colors.white : Colors.black,
+          padding: EdgeInsets.zero,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
+        ),
+        child: Text(text, style: TextStyle(fontSize: 16)),
         onPressed: () {
           setState(() {
-            if (_calculatorMode == CalculatorMode.Normal) {
-              _calculatorMode = CalculatorMode.Integral;
-            } else {
-              _calculatorMode = CalculatorMode.Normal;
-            }
+            _calculatorMode = mode;
           });
         },
-        style: ElevatedButton.styleFrom(
-          padding: EdgeInsets.symmetric(horizontal: 30.0, vertical: 15.0),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(15.0),
-          ),
-        ),
-        child: Text(
-          _calculatorMode == CalculatorMode.Normal ? 'Modo Integral' : 'Modo Normal',
-          style: TextStyle(fontSize: 18.0, color:Colors.amber[700]),
+      ),
+    );
+  }
 
+  Widget _buildBasicKeyboard() {
+    return Container(
+      height: MediaQuery.of(context).size.height * 0.5, // Ajusta este valor según necesites
+      child: GridView.count(
+        crossAxisCount: 4,
+        childAspectRatio: 1.5,
+        mainAxisSpacing: 4,
+        crossAxisSpacing: 4,
+        children: [
+          _buildButton('7'), _buildButton('8'), _buildButton('9'), _buildButton('÷'),
+          _buildButton('4'), _buildButton('5'), _buildButton('6'), _buildButton('×'),
+          _buildButton('1'), _buildButton('2'), _buildButton('3'), _buildButton('-'),
+          _buildButton('0'), _buildButton('.'), _buildButton('='), _buildButton('+'),
+          _buildButton('('), _buildButton(')'), _buildButton('C'), _buildButton('←'),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildFunctionKeyboard() {
+    return Container(
+      height: MediaQuery.of(context).size.height * 0.5, // Ajusta este valor según necesites
+      child: GridView.count(
+        crossAxisCount: 4,
+        childAspectRatio: 1.5,
+        mainAxisSpacing: 4,
+        crossAxisSpacing: 4,
+        children: [
+          _buildButton('sin'), _buildButton('cos'), _buildButton('tan'), _buildButton('∫'),
+          _buildButton('ln'), _buildButton('log'), _buildButton('e^x'), _buildButton('√'),
+          _buildButton('x^2'), _buildButton('x^n'), _buildButton('1/x'), _buildButton('π'),
+          _buildButton('('), _buildButton(')'), _buildButton('C'), _buildButton('←'),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildButton(String buttonText) {
+    return Container(
+      margin: EdgeInsets.all(2),
+      child: ElevatedButton(
+        style: ElevatedButton.styleFrom(
+          backgroundColor: Colors.white,
+          foregroundColor: Colors.black,
+          padding: EdgeInsets.zero,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
         ),
+        child: FittedBox(
+          fit: BoxFit.scaleDown,
+          child: Text(buttonText, style: TextStyle(fontSize: 18)),
+        ),
+        onPressed: () => onButtonPressed(buttonText),
       ),
     );
   }
