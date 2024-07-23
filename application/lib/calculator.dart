@@ -1,6 +1,8 @@
+import 'dart:convert';
+import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 import 'package:application/historial.dart';
 import 'package:application/perfil.dart';
-import 'package:flutter/material.dart';
 
 void main() => runApp(MaterialApp(
       home: Calculator(),
@@ -27,8 +29,8 @@ class Calculator extends StatelessWidget {
                   children: [
                     CircleAvatar(
                       radius: 45,
-                      backgroundImage: NetworkImage(
-                          'https://placekitten.com/200/200'),
+                      backgroundImage:
+                          NetworkImage('https://placekitten.com/200/200'),
                     ),
                     SizedBox(height: 10),
                     Text(
@@ -56,7 +58,8 @@ class Calculator extends StatelessWidget {
                 ),
                 onTap: () {
                   Navigator.pop(context);
-                   Navigator.push(context, MaterialPageRoute(builder: (context) => perfil()));
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => perfil()));
                 },
                 selected: false,
                 selectedTileColor: Colors.amber[300],
@@ -91,7 +94,8 @@ class Calculator extends StatelessWidget {
                 ),
                 onTap: () {
                   Navigator.pop(context);
-                  Navigator.push(context, MaterialPageRoute(builder: (context) => historial()));
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => historial()));
                 },
                 selected: false,
                 selectedTileColor: Colors.amber[300],
@@ -110,36 +114,73 @@ class CalculatorBody extends StatefulWidget {
   _CalculatorBodyState createState() => _CalculatorBodyState();
 }
 
-enum CalculatorMode {
-  Normal,
-  Integral,
-}
-
 class _CalculatorBodyState extends State<CalculatorBody> {
   String input = '';
-  double result = 0.0;
-  CalculatorMode _calculatorMode = CalculatorMode.Normal;
+  String result = '';
+  bool isLoading = false;
 
   void onButtonPressed(String buttonText) {
     setState(() {
       if (buttonText == '=') {
-        result = _calculateResult();
+        _calculateResult();
       } else if (buttonText == 'C') {
         input = '';
-        result = 0.0;
-      } else if (buttonText == 'Back') {
-        _calculatorMode = CalculatorMode.Normal;
+        result = '';
       } else {
         input += buttonText;
       }
     });
   }
 
-  double _calculateResult() {
+  Future<void> _calculateResult() async {
+    setState(() {
+      isLoading = true;
+    });
+
+    final apiKey = '69KUT5-89KGQHGUEJ'; // Tu clave de API de Wolfram Alpha
+    final query = 'integrate $input';
+
     try {
-      return double.parse(input);
+      final response = await http.get(
+        Uri.parse(
+          'https://api.wolframalpha.com/v2/query?input=${Uri.encodeComponent(query)}&format=plaintext&output=JSON&appid=$apiKey',
+        ),
+      );
+
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        final pods = data['queryresult']['pods'] as List;
+        final resultPod = pods.firstWhere(
+            (pod) =>
+                pod['title'] == 'Definite integral' ||
+                pod['title'] == 'Indefinite integral',
+            orElse: () => null);
+
+        if (resultPod != null) {
+          final subpods = resultPod['subpods'] as List;
+          final resultText = subpods.first['plaintext'] as String;
+
+          setState(() {
+            result = resultText;
+            isLoading = false;
+          });
+        } else {
+          setState(() {
+            result = 'No se pudo calcular la integral';
+            isLoading = false;
+          });
+        }
+      } else {
+        setState(() {
+          result = 'Error en la solicitud';
+          isLoading = false;
+        });
+      }
     } catch (e) {
-      return 0.0;
+      setState(() {
+        result = 'Error en la solicitud';
+        isLoading = false;
+      });
     }
   }
 
@@ -159,44 +200,33 @@ class _CalculatorBodyState extends State<CalculatorBody> {
           ),
         ),
         SizedBox(height: 10.0),
-
-        // Filas de botones numéricos y operadores según el modo
-        _calculatorMode == CalculatorMode.Normal
-            ? _buildNormalKeyboard()
-            : _buildIntegralKeyboard(),
-
-        SizedBox(height: 15.0),
-        // Botón para cambiar entre modos
-        _buildSwitchModeButton(),
-      ],
-    );
-  }
-
-  Widget _buildNormalKeyboard() {
-    return Column(
-      children: [
+        isLoading
+            ? CircularProgressIndicator()
+            : Text(
+                'Resultado: $result',
+                style: TextStyle(fontSize: 24.0),
+              ),
+        SizedBox(height: 10.0),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: <Widget>[
             _buildButton('C'),
-            _buildButton('()'),
-            _buildButton('%'),
+            _buildButton('('),
+            _buildButton(')'),
             _buildButton('/'),
           ],
         ),
         SizedBox(height: 10.0),
-
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: <Widget>[
             _buildButton('7'),
             _buildButton('8'),
             _buildButton('9'),
-            _buildButton('x'),
+            _buildButton('*'),
           ],
         ),
         SizedBox(height: 10.0),
-
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: <Widget>[
@@ -207,7 +237,6 @@ class _CalculatorBodyState extends State<CalculatorBody> {
           ],
         ),
         SizedBox(height: 10.0),
-
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: <Widget>[
@@ -217,47 +246,25 @@ class _CalculatorBodyState extends State<CalculatorBody> {
             _buildButton('+'),
           ],
         ),
-
         SizedBox(height: 10.0),
-
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: <Widget>[
-            _buildButton('∫'), // Botón de integral
             _buildButton('0'),
             _buildButton('.'),
             _buildButton('='),
           ],
         ),
         SizedBox(height: 15.0),
-      ],
-    );
-  }
-
-  Widget _buildIntegralKeyboard() {
-    return Column(
-      children: [
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: <Widget>[
-            _buildButton('sin'),
-            _buildButton('cos'),
-            _buildButton('tan'),
-            _buildButton('∫'),
+            _buildButton('x'),
+            _buildButton('y'),
+            _buildButton('z'),
+            _buildButton('dx'),
           ],
         ),
-        SizedBox(height: 10.0),
-
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: <Widget>[
-            _buildButton('√'),
-            _buildButton('log'),
-            _buildButton('ln'),
-            _buildButton('e'),
-          ],
-        ),
-        // Añade más filas según sea necesario para la calculadora de integrales
       ],
     );
   }
@@ -266,14 +273,15 @@ class _CalculatorBodyState extends State<CalculatorBody> {
       {double height = 70.0, double minWidth = 70.0}) {
     Color buttonColor = buttonText == 'C'
         ? const Color.fromARGB(255, 249, 80, 67)
-        : buttonText == '=' || buttonText == '∫'
+        : buttonText == '='
             ? Color(0xFFF9A826)
             : buttonText == '-' ||
                     buttonText == '+' ||
-                    buttonText == 'x' ||
+                    buttonText == '*' ||
                     buttonText == '/' ||
-                    buttonText == '()' ||
-                    buttonText == '%'
+                    buttonText == '(' ||
+                    buttonText == ')' ||
+                    buttonText == 'dx'
                 ? Color.fromARGB(255, 228, 225, 225)
                 : Color(0xFFF0F0F0);
 
@@ -288,7 +296,7 @@ class _CalculatorBodyState extends State<CalculatorBody> {
         buttonText,
         style: TextStyle(
           fontSize: 24.0,
-          color: buttonText == 'C' || buttonText == '=' || buttonText == '∫'
+          color: buttonText == 'C' || buttonText == '='
               ? Colors.white
               : Colors.black,
         ),
@@ -296,34 +304,6 @@ class _CalculatorBodyState extends State<CalculatorBody> {
       onPressed: () {
         onButtonPressed(buttonText);
       },
-    );
-  }
-
-  Widget _buildSwitchModeButton() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 10.0),
-      child: ElevatedButton(
-        onPressed: () {
-          setState(() {
-            if (_calculatorMode == CalculatorMode.Normal) {
-              _calculatorMode = CalculatorMode.Integral;
-            } else {
-              _calculatorMode = CalculatorMode.Normal;
-            }
-          });
-        },
-        style: ElevatedButton.styleFrom(
-          padding: EdgeInsets.symmetric(horizontal: 30.0, vertical: 15.0),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(15.0),
-          ),
-        ),
-        child: Text(
-          _calculatorMode == CalculatorMode.Normal ? 'Modo Integral' : 'Modo Normal',
-          style: TextStyle(fontSize: 18.0, color:Colors.amber[700]),
-
-        ),
-      ),
     );
   }
 }
